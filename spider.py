@@ -27,12 +27,12 @@ class SaveCSV(object):
         try:
             # 第一次打开文件时，第一行写入表头
             if not os.path.exists(path):
-                with open(path, "w", newline='', encoding='utf-8') as csvfile:  # newline='' 去除空白行
+                with open(path, "w", newline='',  encoding='utf_8_sig') as csvfile:  # newline='' 去除空白行
                     writer = csv.DictWriter(csvfile, fieldnames=keyword_list)  # 写字典的方法
                     writer.writeheader()  # 写表头的方法
 
             # 接下来追加写入内容
-            with open(path, "a", newline='', encoding='utf-8') as csvfile:  # newline='' 一定要写，否则写入数据有空白行
+            with open(path, "a", newline='', encoding='utf_8_sig') as csvfile:  # newline='' 一定要写，否则写入数据有空白行
                 writer = csv.DictWriter(csvfile, fieldnames=keyword_list)
                 writer.writerow(item)  # 按行写入数据
                 print("^_^ write success")
@@ -93,7 +93,7 @@ if __name__ == '__main__':
     path = "data/article.csv"
     item_list = ['id','text', 'label']
     s = SaveCSV()
-    for page in range(1,100):#循环页面
+    for page in range(1,5):#循环页面
         try:
             time.sleep(1)         #设置睡眠时间，防止被封号
             json = get_page(page , title )
