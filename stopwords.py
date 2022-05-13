@@ -36,7 +36,7 @@ if __name__ == '__main__':
     # 给出文档路径
     stop_txt = 'stop_words.txt'
     file = "data/day_7/"
-    filename = file + "2022-03-01-2022-03-07.csv"
+    filename = file + "2022-05-03-2022-05-09.csv"
     out_filename = filename.replace('.csv', '_清洗结果.txt')
 
     outputs = open(out_filename, 'w', encoding='utf-8')
