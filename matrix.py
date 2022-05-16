@@ -1,39 +1,89 @@
-# coding:utf-8
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Created on 15 May 2022 22:31
+@author: Siwei Meng
+"""
+import os.path
+import shutil
+import xlwt
+import datetime
+from mpmath import *
+import mpmath as mp
 
 
-import jieba
-import pandas as pd
-import codecs
-import string
-import re
+def main():
+    date_start = datetime.date(2022, 3, 1)
+    fileArr = get_file_name(date_start, 6)
 
-# 清洗文本
-def clearTxt(line:str):
-    if(line != ''):
-        line = line.strip()
-        # 去除文本中的英文和数字
-        line = re.sub("[a-zA-Z0-9]", "", line)
-        # 去除文本中的中文符号和英文符号
-        line = re.sub("[\s+\.\!\/_,$%^*(+\"\'；：“”．]+|[+——！，。？?、~@#￥%……&*（）]+", "", line)
-        return line
-    return None
+    for i in range(10):
+        file = fileArr[i]
+        filename = "./data/day_7/" + file + "_清洗结果.txt"
+        wordsfile = "./data/day_7/" + file + "_50高频词.txt"
 
-#文本切割
-def sent2word(line):
-    segList = jieba.cut(line,cut_all=False)
-    segSentence = ''
-    for word in segList:
-        if word != '\t':
-            segSentence += word + " "
-    return segSentence.strip()
+        workbook = xlwt.Workbook(encoding='utf-8')
+        worksheet = workbook.add_sheet(file)
+        print(worksheet)
+        wordslist = open(wordsfile, encoding='utf-8', errors='ignore').read()
+        wordslist = wordslist.strip().split(' ')
+        print(wordslist)
+
+        f = open(filename, "r", encoding='utf-8', errors='ignore')
+        sentenceList = f.readlines()
+
+        # print(sentenceList)
+
+        num = len(sentenceList)
+
+        for p in range(len(wordslist)):
+            worksheet.write(0, p, wordslist[p])
+        workbook.save(file + "_matrix.xls")
+
+        global k
+
+        for i in range(num):
+            sentence = sentenceList[i]  # 返回单元格中的数据
+            sentence = sentence.strip().split(' ')
+            # print(sentence)
+
+            k = 0
+
+            for single_word in sentence:
+                if k < 50:
+                    if single_word == wordslist[k]:
+                        worksheet.write(i + 1, k, 1)
+                        k = k + 1
+                    else:
+                        # worksheet.write(i+1,k,0)
+                        k = k + 1
+                else:
+                    break
+
+        matrixname = file + "_matrix.xls"
+        workbook.save(matrixname)
+
+        # 移动到文件夹matrix下
+        aa = os.getcwd()
+        matrix_dir = os.path.join(aa, matrixname)
+        targer_path = r"data/matrix"
+        shutil.move(matrix_dir, targer_path)
 
 
+def get_file_name(date_start,cycle):
+    date_start = datetime.date(2022, 3, 1)
+    cycle = 6
+    filenameArr = []
 
-if __name__ == '__main__':
-    df = pd.read_csv('data/article.csv')
-    target = codecs.open('data/cut.txt', 'w', encoding='utf-8')
-    for i in df['text']:
-        line = clearTxt(i)
-        seg_line = sent2word(line)
-        target.writelines(seg_line + '\n')
+    for i in range(10):
 
+        date = date_start + datetime.timedelta(cycle)
+        filename = str(date_start) + '-' + str(date)
+        date_start = date + datetime.timedelta(1)
+        filenameArr.append(filename)
+
+    return filenameArr
+
+
+if __name__== '__main__':
+    main()
