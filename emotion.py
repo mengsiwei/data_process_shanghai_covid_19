@@ -75,8 +75,8 @@ if __name__ == '__main__':
         print("Info: 评论时间段%s  Score：%s  Now Time：%s  EpochTime = %.9f (s)"% (
                 emotion.get_file_basename(path), score, dt.now(), epoch_end_time - epoch_start_time))
 
-        f = open("data/score.txt", "w")
-        f.write(emotion.get_file_basename(path) + str(score) + '\t\n')
+        f = open("data/score.txt", "a+")
+        f.write('时间段{}，情感评价{}\n'.format(emotion.get_file_basename(path), score))
         f.close()
 
 
